@@ -20,14 +20,14 @@
     .container {
         width: 90%;
         max-width: 260px;
-        height: 250px;
+        height: auto;
         background: #fff;
         padding: 30px 25px;
         border-radius: 18px;
         box-shadow: 0px 8px 30px rgba(0,0,0,0.35);
         border: 1px solid #dadada;
         text-align: center;
-        margin-bottom: 40px;   /* space below box */
+        margin-bottom: 40px;
     }
 
     h2 {
@@ -35,6 +35,14 @@
         font-weight: 700;
         color: #002060;
         margin-bottom: 10px;
+    }
+
+    .error {
+        font-size: 15px;
+        color: red;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: none;  /* Hidden initially */
     }
 
     label {
@@ -68,7 +76,6 @@
         box-shadow: 0px 4px 10px rgba(0,0,0,0.25);
     }
 
-    /* Common style for other buttons */
     .full-btn {
         width: 120px;
         height: 20px;
@@ -95,13 +102,10 @@
     }
 
     .contact {
-      width: 20%;
-        height: 20px;
         border: 3px solid #ff8d00;
         color: #ff8d00;
     }
 
-    /* Row for bottom buttons */
     .row-btns {
         display: flex;
         justify-content: center;
@@ -116,18 +120,34 @@
 <div class="container">
     <h2>Login</h2>
 
-    <label>Token ID</label>
-    <input type="text" placeholder="Token ID *">
+    <!-- Error message -->
+    <div id="errorMsg" class="error">Token ID Not Found</div>
 
-    <button>Proceed</button>
+    <label>Token ID</label>
+    <input type="text" id="tokenInput" placeholder="Token ID *">
+
+    <button onclick="checkToken()">Proceed</button>
 </div>
 
-<a href="https://t.me/babajisupport" class="full-btn buy-btn">Purchase / Buy</a>
+<a href="https://t.me/+_TgOGRj1Vvc3ZmI1" class="full-btn buy-btn">Purchase / Buy</a>
 
 <div class="row-btns">
-    <a href="https://t.me/babajisupport" class="full-btn renew" style="width:160px;">Renew / Renewal</a>
-    <a href="https://t.me/babajisupport" class="full-btn contact" style="width:160px;">Contact</a>
+    <a href="https://t.me/+_TgOGRj1Vvc3ZmI1" class="full-btn renew" style="width:160px;">Renew / Renewal</a>
+    <a href="https://t.me/+_TgOGRj1Vvc3ZmI1" class="full-btn contact" style="width:160px;">Contact</a>
 </div>
+
+<script>
+function checkToken() {
+    let token = document.getElementById("tokenInput").value.trim();
+
+    if(token === "") {
+        document.getElementById("errorMsg").style.display = "block";
+    } else {
+        // Example invalid check - always show error for now
+        document.getElementById("errorMsg").style.display = "block";
+    }
+}
+</script>
 
 </body>
 </html>
