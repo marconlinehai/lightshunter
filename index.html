@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login to APKHunter</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 60px;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 260px;
+        height: 250px;
+        background: #fff;
+        padding: 30px 25px;
+        border-radius: 18px;
+        box-shadow: 0px 8px 30px rgba(0,0,0,0.35);
+        border: 1px solid #dadada;
+        text-align: center;
+        margin-bottom: 40px;   /* space below box */
+    }
+
+    h2 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #002060;
+        margin-bottom: 10px;
+    }
+
+    label {
+        font-size: 15px;
+        color: #000;
+        float: left;
+        margin-bottom: 6px;
+        font-weight: 600;
+    }
+
+    input {
+        width: 90%;
+        padding: 15px;
+        font-size: 16px;
+        border: 2px solid #bfbfbf;
+        border-radius: 14px;
+        outline: none;
+        margin-bottom: 20px;
+    }
+
+    button {
+        width: 120px;
+        height: 46px;
+        font-size: 14px;
+        background: #ffffff;
+        border: 1px solid #002060;
+        border-radius: 12px;
+        color: #002060;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.25);
+    }
+
+    /* Common style for other buttons */
+    .full-btn {
+        width: 120px;
+        height: 20px;
+        padding: 14px;
+        border-radius: 10px;
+        font-size: 16px;
+        display: block;
+        text-align: center;
+        margin: 15px auto;
+        font-weight: 600;
+        background: #ffffff;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .buy-btn {
+        border: 3px solid #007bff;
+        color: #007bff;
+    }
+
+    .renew {
+        border: 3px solid #000e55;
+        color: #000e55;
+    }
+
+    .contact {
+      width: 20%;
+        height: 20px;
+        border: 3px solid #ff8d00;
+        color: #ff8d00;
+    }
+
+    /* Row for bottom buttons */
+    .row-btns {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Login</h2>
+
+    <label>Token ID</label>
+    <input type="text" placeholder="Token ID *">
+
+    <button>Proceed</button>
+</div>
+
+<a href="https://t.me/babajisupport" class="full-btn buy-btn">Purchase / Buy</a>
+
+<div class="row-btns">
+    <a href="https://t.me/babajisupport" class="full-btn renew" style="width:160px;">Renew / Renewal</a>
+    <a href="https://t.me/babajisupport" class="full-btn contact" style="width:160px;">Contact</a>
+</div>
+
+</body>
+</html>
