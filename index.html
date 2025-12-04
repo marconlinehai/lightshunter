@@ -2,150 +2,119 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login to APKHunter</title>
-
+<title>Bulk Bill Data Export</title>
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        background: #ffffff;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-top: 60px;
-    }
-
-    .container {
-        width: 90%;
-        max-width: 260px;
-        height: auto;
-        background: #fff;
-        padding: 30px 25px;
-        border-radius: 18px;
-        box-shadow: 0px 8px 30px rgba(0,0,0,0.35);
-        border: 1px solid #dadada;
-        text-align: center;
-        margin-bottom: 40px;
-    }
-
-    h2 {
-        font-size: 32px;
-        font-weight: 700;
-        color: #002060;
-        margin-bottom: 10px;
-    }
-
-    .error {
-        font-size: 15px;
-        color: red;
-        font-weight: 600;
-        margin-bottom: 10px;
-        display: none;  /* Hidden initially */
-    }
-
-    label {
-        font-size: 15px;
-        color: #000;
-        float: left;
-        margin-bottom: 6px;
-        font-weight: 600;
-    }
-
-    input {
-        width: 90%;
-        padding: 15px;
-        font-size: 16px;
-        border: 2px solid #bfbfbf;
-        border-radius: 14px;
-        outline: none;
-        margin-bottom: 20px;
-    }
-
-    button {
-        width: 120px;
-        height: 46px;
-        font-size: 14px;
-        background: #ffffff;
-        border: 1px solid #002060;
-        border-radius: 12px;
-        color: #002060;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: 0px 4px 10px rgba(0,0,0,0.25);
-    }
-
-    .full-btn {
-        width: 120px;
-        height: 20px;
-        padding: 14px;
-        border-radius: 10px;
-        font-size: 16px;
-        display: block;
-        text-align: center;
-        margin: 15px auto;
-        font-weight: 600;
-        background: #ffffff;
-        text-decoration: none;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    }
-
-    .buy-btn {
-        border: 3px solid #007bff;
-        color: #007bff;
-    }
-
-    .renew {
-        border: 3px solid #000e55;
-        color: #000e55;
-    }
-
-    .contact {
-        border: 3px solid #ff8d00;
-        color: #ff8d00;
-    }
-
-    .row-btns {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-    }
-
+body { font-family: Arial; background: #f2f2f2; padding: 20px; }
+.box { background: white; padding: 20px; border-radius:10px; max-width:800px; margin:auto; box-shadow:0 0 10px #ccc;}
+textarea { width:100%; height:150px; padding:10px; border-radius:6px; }
+button { padding:10px; border:none; background:#007bff; color:white; border-radius:6px; cursor:pointer; margin-top:10px; }
+.progress { width:100%; background:#ddd; border-radius:5px; overflow:hidden; }
+.progress-bar { height:20px; width:0; background:#28a745; text-align:center; color:white; }
+table { width:100%; border-collapse:collapse; margin-top:20px; }
+table, th, td { border:1px solid #ccc; }
+th, td { padding:8px; }
 </style>
 </head>
-
 <body>
 
-<div class="container">
-    <h2>Login</h2>
+<div class="box">
+<h2>Admin Baba Kismat 3.0</h2>
 
-    <!-- Error message -->
-    <div id="errorMsg" class="error">Token ID Not Found</div>
-
-    <label>Token ID</label>
-    <input type="text" id="tokenInput" placeholder="Token ID *">
-
-    <button onclick="checkToken()">Proceed</button>
+<!-- Wallet -->
+<div style="background:#fff7e6;padding:15px;border-radius:10px;margin-bottom:15px;border:1px solid #ffcc80;">
+<h3>💰 Recharge Wallet</h3>
+<p><b>Available Balance:</b> <span id="walletBalance">46630</span> ₹</p>
+<p><b>Per Data Charge:</b> 2.2 ₹</p>
+<button onclick="rechargeWallet()" style="background:#ff9800;width:100%;">Add Balance</button>
 </div>
 
-<a href="https://t.me/+_TgOGRj1Vvc3ZmI1" class="full-btn buy-btn">Purchase / Buy</a>
+<textarea id="mobileList" placeholder="Enter mobile numbers line by line..."></textarea>
+<button onclick="startBulk()">Start Bulk</button>
 
-<div class="row-btns">
-    <a href="https://t.me/+_TgOGRj1Vvc3ZmI1" class="full-btn renew" style="width:160px;">Renew / Renewal</a>
-    <a href="https://t.me/+_TgOGRj1Vvc3ZmI1" class="full-btn contact" style="width:160px;">Contact</a>
+<div class="progress" style="margin-top:15px;">
+<div class="progress-bar" id="progressBar">0%</div>
 </div>
 
+<table id="resultTable" style="display:none;">
+<thead>
+<tr><th>Number</th><th>Name</th><th>UPI Number</th><th>IFSC</th></tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<button id="downloadBtn" onclick="downloadExcel()" style="display:none;margin-top:15px;background:#28a745;">Download Excel</button>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-function checkToken() {
-    let token = document.getElementById("tokenInput").value.trim();
+let bulkData = [];
 
-    if(token === "") {
-        document.getElementById("errorMsg").style.display = "block";
-    } else {
-        // Example invalid check - always show error for now
-        document.getElementById("errorMsg").style.display = "block";
+function rechargeWallet() {
+    let amt = parseFloat(prompt("Enter amount to add:"));
+    if (!amt || amt <=0) return alert("Invalid Amount!");
+    let current = parseFloat(document.getElementById("walletBalance").innerText);
+    current += amt;
+    document.getElementById("walletBalance").innerText = current;
+    alert("Wallet Recharged!");
+}
+
+function deductCharge() {
+    let current = parseFloat(document.getElementById("walletBalance").innerText);
+    let charge = 2.2;
+    if(current<charge){ alert("❌ Insufficient balance!"); return false; }
+    current -= charge;
+    document.getElementById("walletBalance").innerText = current;
+    return true;
+}
+
+async function startBulk() {
+    const txt = document.getElementById("mobileList").value.trim();
+    if(!txt) return alert("Enter numbers!");
+    const numbers = txt.split("\n").map(n=>n.trim()).filter(n=>n);
+
+    // Deduct total charge
+    const totalCharge = numbers.length*2.2;
+    if(parseFloat(document.getElementById("walletBalance").innerText) < totalCharge) {
+        return alert("Insufficient balance for all numbers!");
     }
+
+    const resTable = document.querySelector("#resultTable tbody");
+    resTable.innerHTML = "";
+    document.getElementById("resultTable").style.display="table";
+    document.getElementById("downloadBtn").style.display="none";
+    bulkData = [];
+
+    const chunkSize = 50; // 50 numbers per batch
+    for(let i=0;i<numbers.length;i+=chunkSize){
+        const chunk = numbers.slice(i,i+chunkSize);
+        const response = await fetch("http://localhost:3000/bulk-check", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({numbers:chunk})
+        });
+        const result = await response.json();
+        result.results.forEach(r=>{
+            bulkData.push(r);
+            const row = `<tr><td>${r.Number}</td><td>${r.Name}</td><td>${r.UPI}</td><td>${r.IFSC}</td></tr>`;
+            resTable.innerHTML += row;
+            deductCharge();
+        });
+        // update progress
+        const percent = Math.floor((i+chunk.length)/numbers.length*100);
+        document.getElementById("progressBar").style.width = percent+"%";
+        document.getElementById("progressBar").innerText = percent+"%";
+    }
+
+    alert("Bulk Completed!");
+    document.getElementById("downloadBtn").style.display="block";
+}
+
+function downloadExcel(){
+    const ws = XLSX.utils.json_to_sheet(bulkData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws,"DATA");
+    XLSX.writeFile(wb,"Bulk-UPI-Data.xlsx");
 }
 </script>
 
